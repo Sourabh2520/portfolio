@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { FiGithub, FiExternalLink, FiServer, FiDatabase, FiShield, FiLayers } from 'react-icons/fi'
+import { FiGithub, FiExternalLink, FiServer, FiLayers, FiZap } from 'react-icons/fi'
 
 const projects = [
   {
@@ -45,12 +45,36 @@ const projects = [
       'Student & Admin dashboards',
     ],
     architecture: ['HTML/CSS/JS Frontend', 'Java Servlet Backend', 'JDBC Layer', 'MySQL DB'],
-    github:  'https://github.com/Sourabh2520/College-Gate-Pass-System',
+    github: 'https://github.com/Sourabh2520/College-Gate-Pass-System',
+    demo: '#',
+  },
+  {
+    id: 3,
+    title: 'Log Analyzer',
+    subtitle: 'AI-Powered Log Analysis & Failure Detection System',
+    tech: ['Java 21', 'Spring Boot 3', 'Spring Security', 'MySQL', 'Redis', 'Ollama/TinyLlama', 'React 18', 'Tailwind CSS', 'Docker', 'JWT'],
+    category: 'AI + Spring Boot',
+    color: '#ffd700',
+    icon: FiZap,
+    problem: 'Engineers spend hours manually scanning application logs to find root causes — this automates that with AI.',
+    solution: 'Designed and built the full stack solo — backend architecture, AI integration, database schema, security layer, and React frontend.',
+    features: [
+      'AI-powered root cause analysis using Ollama/TinyLlama',
+      'JWT authentication with Redis-based token blacklisting',
+      'SHA-256 based duplicate file & recurring error detection',
+      'Asynchronous log processing (Spring @Async + ThreadPoolTaskExecutor)',
+      'Email notifications for critical errors (Gmail SMTP)',
+      'Multi-format support: .log, .txt, .json, .pdf',
+      'CSV export, date-range analytics, search history (Redis)',
+      'Role-based access control (Admin/User)',
+    ],
+    architecture: ['React Frontend', 'Spring Boot API', 'Ollama AI', 'Redis Cache', 'MySQL DB'],
+    github: 'https://github.com/Sourabh2520/log-analyzer',
     demo: '#',
   },
 ]
 
-const filters = ['All', 'Spring Boot', 'Java + JDBC']
+const filters = ['All', 'Spring Boot', 'Java + JDBC', 'AI + Spring Boot']
 
 function ArchFlow({ steps, color }) {
   return (
