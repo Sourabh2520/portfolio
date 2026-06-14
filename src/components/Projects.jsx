@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { FiGithub, FiExternalLink, FiServer, FiLayers, FiZap } from 'react-icons/fi'
+import { FiGithub, FiExternalLink, FiServer, FiLayers, FiZap, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 
 const projects = [
   {
     id: 1,
     title: 'Student Management System',
     subtitle: 'Enterprise-grade backend system',
+    images: ['/projects/sms-1.png', '/projects/sms-2.png', '/projects/sms-3.png'],
     tech: ['Spring Boot', 'Spring Security', 'REST APIs', 'MySQL', 'JWT', 'Hibernate/JPA'],
     category: 'Spring Boot',
     color: '#00d4ff',
@@ -30,6 +31,7 @@ const projects = [
     id: 2,
     title: 'College Gate Pass System',
     subtitle: 'Multi-level approval workflow',
+    images: ['/projects/gps-1.png', '/projects/gps-2.png'],
     tech: ['Java', 'JDBC', 'HTML', 'CSS', 'JavaScript', 'MySQL'],
     category: 'Java + JDBC',
     color: '#00ff88',
@@ -52,6 +54,7 @@ const projects = [
     id: 3,
     title: 'Log Analyzer',
     subtitle: 'AI-Powered Log Analysis & Failure Detection System',
+    images: ['/projects/log-1.png', '/projects/log-2.png', '/projects/log-3.png'],
     tech: ['Java 21', 'Spring Boot 3', 'Spring Security', 'MySQL', 'Redis', 'Ollama/TinyLlama', 'React 18', 'Tailwind CSS', 'Docker', 'JWT'],
     category: 'AI + Spring Boot',
     color: '#ffd700',
@@ -75,6 +78,95 @@ const projects = [
 ]
 
 const filters = ['All', 'Spring Boot', 'Java + JDBC', 'AI + Spring Boot']
+
+// Image Slider Component
+function ImageSlider({ images, color }) {
+  const [current, setCurrent] = useState(0)
+
+  const prev = (e) => {
+    e.stopPropagation()
+    setCurrent(i => (i === 0 ? images.length - 1 : i - 1))
+  }
+
+  const next = (e) => {
+    e.stopPropagation()
+    setCurrent(i => (i === images.length - 1 ? 0 : i + 1))
+  }
+
+  return (
+    <div className="relative w-full h-64 rounded-sm overflow-hidden mb-5 group/slider">
+      {/* Image */}
+      <AnimatePresence mode="wait">
+        <motion.img
+          key={current}
+          src={images[current]}
+          alt={`Project screenshot ${current + 1}`}
+          className="w-full h-full object-cover"
+          initial={{ opacity: 0, x: 30 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -30 }}
+          transition={{ duration: 0.3 }}
+          onError={(e) => {
+            // Fallback if image not found
+            e.target.style.display = 'none'
+            e.target.nextSibling.style.display = 'flex'
+          }}
+        />
+      </AnimatePresence>
+
+      {/* Fallback placeholder */}
+      <div
+        className="absolute inset-0 items-center justify-center hidden"
+        style={{ background: `linear-gradient(135deg, ${color}15, ${color}05)` }}
+      >
+        <span className="font-mono text-xs text-slate-600">Image not found</span>
+      </div>
+
+      {/* Overlay gradient */}
+      <div className="absolute inset-0 bg-gradient-to-t from-cyber-black/60 to-transparent" />
+
+      {/* Prev / Next arrows - show on hover */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={prev}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-sm bg-black/50 text-white opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/80"
+          >
+            <FiChevronLeft className="text-lg" />
+          </button>
+          <button
+            onClick={next}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-sm bg-black/50 text-white opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 hover:bg-black/80"
+          >
+            <FiChevronRight className="text-lg" />
+          </button>
+        </>
+      )}
+
+      {/* Dots indicator */}
+      {images.length > 1 && (
+        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={(e) => { e.stopPropagation(); setCurrent(i) }}
+              className="w-1.5 h-1.5 rounded-full transition-all duration-300"
+              style={{
+                background: i === current ? color : '#ffffff44',
+                boxShadow: i === current ? `0 0 6px ${color}` : 'none',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Image counter */}
+      <div className="absolute top-2 right-2 px-2 py-0.5 rounded-sm bg-black/50 font-mono text-xs text-white">
+        {current + 1}/{images.length}
+      </div>
+    </div>
+  )
+}
 
 function ArchFlow({ steps, color }) {
   return (
@@ -106,12 +198,15 @@ function ProjectCard({ project, inView, index }) {
       transition={{ delay: index * 0.15, duration: 0.7 }}
       className="glass rounded-sm border border-slate-800 overflow-hidden group transition-all duration-300"
       whileHover={{ borderColor: project.color + '33' }}
-      style={{ '--proj-color': project.color }}
     >
       {/* Card top accent bar */}
       <div className="h-0.5 w-full" style={{ background: `linear-gradient(90deg, ${project.color}, transparent)` }} />
 
       <div className="p-6 lg:p-8">
+
+        {/* Image Slider */}
+        <ImageSlider images={project.images} color={project.color} />
+
         <div className="flex items-start justify-between gap-4 mb-5">
           <div className="flex items-start gap-4">
             {/* Icon */}
